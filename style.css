@@ -1,0 +1,25 @@
+#header .headdiv {
+  display: grid;
+  width: 100%;
+  top: 0;
+  left: 0;
+  position: center;
+  border-radius: 0.4rem;
+  background-color: rgb(36, 133, 60);
+  text-align: center;
+}
+h2 {
+  color: white;
+}
+.title {
+  /* Titulo do texto*/
+  font: 700 1.31rem 'Poppins', sans-serif;
+  color: var(--title-color);
+  -webkit-font-smoothing: auto;
+}
+p {
+  text-align: center;
+}
+body {
+  background: whitesmoke;
+}
