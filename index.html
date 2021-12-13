@@ -9,22 +9,51 @@
       href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Poppins:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
+    <title>Supervisório TV Ceará</title>
   </head>
 
   <body>
     <!---------------------------------------------->
-    <header id="header">
+    <header>
       <div class="headdiv">
-        <h2>Supervisório TVC</h2>
-        <div class="icon-tvc"></div>
+        <div>
+          <h2>Supervisório TVC</h2>
+        </div>
+        <div>
+          <i class="icon-tvc"></i>
+        </div>
       </div>
     </header>
     <!---------------------------------------------->
     <main>
-      <div class="container">
-        <p class="paragrafo">Olá mundo!</p>
-        <i class="icon-tvc"></i>
-      </div>
+      <section id="section1">
+        <div class="maindiv">
+          <h1>Monitoramento</h1>
+          <h3>Led 1</h3>
+          <button
+            onclick="window.location = 'http://+'location.hostname+'/led1/on'"
+          >
+            on
+          </button>
+          <button
+            onclick="window.location = 'http://+'location.hostname+'/led1/on'"
+          >
+            off
+          </button>
+          <h3>Led 2</h3>
+
+          <button
+            onclick="window.location = 'http://+'location.hostname+'/led2/on'"
+          >
+            on
+          </button>
+          <button
+            onclick="window.location = 'http://+'location.hostname+'/led2/on'"
+          >
+            off
+          </button>
+        </div>
+      </section>
     </main>
   </body>
 </html>

@@ -1,25 +1,55 @@
-#header .headdiv {
-  display: grid;
-  width: 100%;
-  top: 0;
-  left: 0;
-  position: center;
-  border-radius: 0.4rem;
-  background-color: rgb(36, 133, 60);
-  text-align: center;
-}
-h2 {
-  color: white;
-}
 .title {
   /* Titulo do texto*/
   font: 700 1.31rem 'Poppins', sans-serif;
   color: var(--title-color);
   -webkit-font-smoothing: auto;
 }
+h1,
+h2,
+h3,
+button {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 p {
   text-align: center;
+}
+text {
+  font-family: Arial, Helvetica, sans-serif;
 }
 body {
   background: whitesmoke;
 }
+/* ------------------------------------------------ */
+header .headdiv {
+  display: grid;
+  width: 100%;
+  top: 0;
+  left: 0;
+  height: 4rem;
+  position: center;
+  border-radius: 0.4rem;
+  background-color: rgb(36, 133, 60);
+  text-align: center;
+}
+header .headdiv h2 {
+  color: white;
+  position: center;
+}
+header .headdiv i {
+  color: white;
+  font-size: 4rem;
+  position: absolute;
+  left: 1rem;
+  top: 0.5rem;
+}
+
+/* ------------------------------------------------ */
+#section1 .maindiv {
+  background: #666;
+  max-width: auto;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+/* ------------------------------------------------ */
