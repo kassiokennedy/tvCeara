@@ -45,11 +45,16 @@ header .headdiv i {
 }
 
 /* ------------------------------------------------ */
-#section1 .maindiv {
-  background: #666;
+#section1 .div1 {
+  background: rgb(232, 232, 232);
+  border-radius: 0.4rem;
   max-width: auto;
   text-align: center;
-  margin-left: auto;
+  /*
+  margin-top: 10rem;
+  margin-bottom: 10rem;
+  margin-le                                                                               ft: auto;
   margin-right: auto;
+  */
 }
 /* ------------------------------------------------ */
