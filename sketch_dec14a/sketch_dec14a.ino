@@ -4,11 +4,12 @@
 //pagina http://192.168.1.151/
 #include <ESP8266WiFi.h> //INCLUSÃO DA BIBLIOTECA NECESSÁRIA PARA FUNCIONAMENTO DO CÓDIGO
 
-const char *ssid = "GL INTERNET_C140";          //VARIÁVEL QUE ARMAZENA O NOME DA REDE SEM FIO EM QUE VAI CONECTAR
-const char *password = "Engenhari@2019"; //VARIÁVEL QUE ARMAZENA A SENHA DA REDE SEM FIO EM QUE VAI CONECTAR
+const char *ssid = "TVC";          //VARIÁVEL QUE ARMAZENA O NOME DA REDE SEM FIO EM QUE VAI CONECTAR
+const char *password = "504b2014"; //VARIÁVEL QUE ARMAZENA A SENHA DA REDE SEM FIO EM QUE VAI CONECTAR
 
 WiFiServer server(80); //CASO OCORRA PROBLEMAS COM A PORTA 80, UTILIZE OUTRA (EX:8082,8089) E A CHAMADA DA URL FICARÁ IP:PORTA(EX: 192.168.0.15:8082)
-
+int x = 0;
+int i = 0;
 void setup()
 {
   pinMode(2, OUTPUT); // pisca pisca do le
@@ -25,7 +26,7 @@ void setup()
 
   while (WiFi.status() != WL_CONNECTED)
   {                    //ENQUANTO STATUS FOR DIFERENTE DE CONECTADO
-    delay(500);        //INTERVALO DE 500 MILISEGUNDOS
+    delay(50);        //INTERVALO DE 500 MILISEGUNDOS
     Serial.print("."); //ESCREVE O CARACTER NA SERIAL
   }
 
@@ -47,6 +48,8 @@ void loop()
   digitalWrite(2, LOW);  // Apaga o Led
   delay(100);            // Aguarda 1 segundo
 
+  i++;
+  
   WiFiClient client = server.available(); //VERIFICA SE ALGUM CLIENTE ESTÁ CONECTADO NO SERVIDOR
   if (!client)
   {         //SE NÃO EXISTIR CLIENTE CONECTADO, FAZ
@@ -66,9 +69,13 @@ void loop()
   client.println("Content-Type: text/html"); //ESCREVE PARA O CLIENTE O TIPO DE CONTEÚDO(texto/html)
   client.println("");
   client.println("<!DOCTYPE HTML>");                                 //INFORMA AO NAVEGADOR A ESPECIFICAÇÃO DO HTML
+  client.println("<head>"); 
+  client.println("<title>ESP8266</title>"); 
+  client.println("</head>"); 
   client.println("<html>");                                          //ABRE A TAG "html"
   client.println("<h1><center>Ola cliente!</center></h1>");          //ESCREVE "Ola cliente!" NA PÁGINA
-  client.println("<center><font size='5'>Seja bem vindo!</center>"); //ESCREVE "Seja bem vindo!" NA PÁGINA
+  client.println("<center><font size='5'>Temperatura:</center>"); //ESCREVE "Seja bem vindo!" NA PÁGINA
+ client.println("<h2><center>" + String(i) + " C</center></h2>");
   client.println("</html>");                                         //FECHA A TAG "html"
   delay(1);                                                          //INTERVALO DE 1 MILISEGUNDO
   Serial.println("Cliente desconectado");                            //ESCREVE O TEXTO NA SERIAL
