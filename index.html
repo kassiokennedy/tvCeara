@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt_BR">
   <head>
+    <meta http-equiv="refresh" content="5" />
+    <meta charset="UTF-8" />
+
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="assets/iconTVC/style.css" />
-
-    <meta charset="UTF-8" />
     <link
       href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Poppins:wght@400;500;700&display=swap"
       rel="stylesheet"
@@ -26,7 +27,9 @@
     </header>
     <!---------------------------------------------->
     <main>
+      <!---------------------------------------------->
       <section id="section1">
+        <!--
         <div class="div1">
           <h1>Monitoramento</h1>
           <h3>Led 1</h3>
@@ -53,11 +56,43 @@
             off
           </button>
         </div>
-        <div class="div2">
+        -->
+        <script>
+          window.setInterval(function () {
+            reloadIFrame()
+          }, 300)
+
+          function reloadIFrame() {
+            console.log('reloading..')
+            document.getElementById('sup1').contentWindow.location.reload()
+            var t = setTimeout(refreshIFrame, 300)
+          }
+        </script>
+        <div class="div2" onload="refreshIFrame()">
+          <!--
+          <p id="div22">---</p>
+          <script>
+            var i = 0
+            setInterval(displayHello, 500)
+
+            function displayHello() {
+              document.getElementById('div22').innerHTML = document.
+            }
+          </script>
+          -->
+
           <iframe
+            id="sup1"
             src="http://192.168.1.151:80/"
-            width="640"
-            height="360"
+            width="360"
+            height="200"
+            name="iframe_artigos"
+          ></iframe>
+          <iframe
+            id="sup2"
+            src="http://192.168.1.151:80/"
+            width="360"
+            height="200"
             name="iframe_artigos"
           ></iframe>
         </div>

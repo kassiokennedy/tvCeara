@@ -57,4 +57,10 @@ header .headdiv i {
   margin-right: auto;
   */
 }
+#section1 .div2 {
+  background: rgb(232, 232, 232);
+  border-radius: 0.4rem;
+  max-width: 360;
+  text-align: center;
+}
 /* ------------------------------------------------ */
