@@ -1,19 +1,33 @@
 //https://blogmasterwalkershop.com.br/embarcados/nodemcu/nodemcu-como-criar-um-web-server-e-conectar-a-uma-rede-wifi
 
 //pagina http://192.168.1.151/
-#include <ESP8266WiFi.h> //INCLUSÃO DA BIBLIOTECA NECESSÁRIA PARA FUNCIONAMENTO DO CÓDIGO
+#ifdef ESP8266
+#include <ESP8266WiFi.h>
+#include <ESP8266mDNS.h>
+#elif defined(ESP32)
+#include <WiFi.h>
+#include <ESPmDNS.h>
+#else
+#error "Board not found"
+#endif
 
+//----------------Login---------------------------------
 const char *ssid = "TVC";          // WIFI password
 const char *password = "504b2014"; // ID Password
-
+//----------------IP definition (not work)--------------
+IPAddress ip(192,168,10,175);
+IPAddress gateway(192,168,10,1);
+IPAddress subnet(255,255,255,0);
+//---------------------------------------------------------------------------
 WiFiServer server(80); //CASO OCORRA PROBLEMAS COM A PORTA 80, UTILIZE OUTRA (EX:8082,8089) E A CHAMADA DA URL FICARÁ IP:PORTA(EX: 192.168.0.15:8082)
+//---------------------------------------------------------------------------
 int x = 0;
 int i = 0;
 int outputpin = A0;
-/*
+
 // Set LED GPIO
 const int ledPin = 2;
-*/
+
 void setup()
 {
   pinMode(2, OUTPUT); // Led
@@ -28,26 +42,26 @@ void setup()
 
   WiFi.begin(ssid, password); //PASSA OS PARÂMETROS PARA A FUNÇÃO QUE VAI FAZER A CONEXÃO COM A REDE SEM FIO
   
-/*
+
   while (WiFi.status() != WL_CONNECTED)
   {                    //ENQUANTO STATUS FOR DIFERENTE DE CONECTADO
     delay(50);        //INTERVALO DE 500 MILISEGUNDOS
     Serial.print("."); //ESCREVE O CARACTER NA SERIAL
   }
-*/
+
 /*
   Serial.println("");                        //PULA UMA LINHA NA JANELA SERIAL
   Serial.print("Conectado a rede sem fio "); //ESCREVE O TEXTO NA SERIAL
   Serial.println(ssid);                      //ESCREVE O NOME DA REDE NA SERIAL
 */
   server.begin();                            //INICIA O SERVIDOR PARA RECEBER DADOS NA PORTA DEFINIDA EM "WiFiServer server(porta);"
-/*  
+
   Serial.println("Servidor iniciado");       //ESCREVE O TEXTO NA SERIAL
 
   Serial.print("IP para se conectar ao NodeMCU: "); //ESCREVE O TEXTO NA SERIAL
   Serial.print("http://");                          //ESCREVE O TEXTO NA SERIAL
   Serial.println(WiFi.localIP());                   //ESCREVE NA SERIAL O IP RECEBIDO DENTRO DA REDE SEM FIO (O IP NESSA PRÁTICA É RECEBIDO DE FORMA AUTOMÁTICA)
-*/
+
 }
 
 void loop()
@@ -57,11 +71,7 @@ void loop()
   float celsius = millivolts / 10;
   Serial.print("in DegreeC=   ");
   Serial.println(celsius);
-  
-  digitalWrite(2, HIGH); // Acende o Led
-  delay(200);            // Aguarda 1 segundo
-  digitalWrite(2, LOW);  // Apaga o Led
-  delay(200);            // Aguarda 1 segundo
+  delay(500);                                                          //INTERVALO DE 1 MILISEGUNDO
 
   i++;
   
@@ -70,12 +80,13 @@ void loop()
   {         //SE NÃO EXISTIR CLIENTE CONECTADO, FAZ
     return; //REEXECUTA O PROCESSO ATÉ QUE ALGUM CLIENTE SE CONECTE AO SERVIDOR
   }
-
+/*
   Serial.println("Novo cliente se conectou!"); //ESCREVE O TEXTO NA SERIAL
   while (!client.available())
   {           //ENQUANTO CLIENTE ESTIVER CONECTADO
     delay(1); //INTERVALO DE 1 MILISEGUNDO
   }
+  */
   String request = client.readStringUntil('\r'); //FAZ A LEITURA DA PRIMEIRA LINHA DA REQUISIÇÃO
   Serial.println(request);                       //ESCREVE A REQUISIÇÃO NA SERIAL
   client.flush();                                //AGUARDA ATÉ QUE TODOS OS DADOS DE SAÍDA SEJAM ENVIADOS AO CLIENTE
@@ -92,9 +103,16 @@ void loop()
   client.println("<center><font size='5'>Temperatura: " + String(celsius) + "C</center>"); //ESCREVE "Seja bem vindo!" NA PÁGINA
   //client.println("<h2><center>" + String(celsius) + " C</center></h2>");
   client.println("</html>");                                         //FECHA A TAG "html"
-  delay(1);                                                          //INTERVALO DE 1 MILISEGUNDO
+  
 /*  
   Serial.println("Cliente desconectado");                            //ESCREVE O TEXTO NA SERIAL
   Serial.println("");                                                //PULA UMA LINHA NA JANELA SERIAL
+
+
+   
+  digitalWrite(2, HIGH); // Acende o Led
+  delay(200);            // Aguarda 1 segundo
+  digitalWrite(2, LOW);  // Apaga o Led
+  delay(200);            // Aguarda 1 segundo
 */
 }
