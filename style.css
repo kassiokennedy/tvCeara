@@ -76,7 +76,6 @@ iframe {
   border-radius: 0.4rem;
 }
 /* ------------------------------------------------ */
-
 /* Style the tab */
 .tab {
   border-radius: 0.4rem;
@@ -103,7 +102,8 @@ iframe {
 
 /* Change background color of buttons on hover */
 .tab button:hover {
-  background-color: #ddd;
+  /*background-color: #ddd;*/
+  background: whitesmoke;
 }
 
 /* Create an active/current tablink class */

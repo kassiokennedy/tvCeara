@@ -19,12 +19,13 @@
 AsyncWebServer server(80); // server port 80
 //WiFiServer server(8082);
 //----------------Login---------------------------------
-const char* ssid = "TVC"; // your network SSID (name)
-const char* password = "504b2014"; // your network password (use for WPA, or use as key for WEP)
-//----------------IP definition (not work)--------------
-IPAddress ip(192,168,10,175);
-IPAddress gateway(192,168,10,1);
+const char *ssid = "GL INTERNET_C140";          // WIFI password
+const char *password = "Engenhari@2019"; // ID Password
+//----------------IP definition ------------------------
+IPAddress ip(10,0,0,200);
+IPAddress gateway(10,0,0,1);
 IPAddress subnet(255,255,255,0);
+
 //////////////////////////////////////////////////////////////////////////////
 void notFound(AsyncWebServerRequest *request)
 {
