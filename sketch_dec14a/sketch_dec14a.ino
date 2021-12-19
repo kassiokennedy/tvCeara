@@ -10,12 +10,14 @@
 #error "Board not found"
 #endif
 #include <ESPAsyncWebServer.h>
+
+#include <WebSocketsServer.h>
 //---------------------------------------------------------------------------
 #define outputpin A0
 const int ledPin = 2;//---------------Set LED GPIO
 #define LED1 13
 #define LED2 12
-#define au
+
 //----------------Login---------------------------------
 const char *ssid = "GL INTERNET_C140";          // WIFI password
 const char *password = "Engenhari@2019"; // ID Password
@@ -40,11 +42,11 @@ char webpage[] PROGMEM = R"=====(
 <center>
 <h1>Teste<h1>
   <h3>Led 1</h3>
-  <button onclick="window.location = 'http://+'location.hostname+'/led1/on'">on</button>
-  <button onclick="window.location = 'http://+'location.hostname+'/led1/off'">off</button>
+  <button onclick="window.location = 'http://'+location.hostname+'/led1/on'">on</button>
+  <button onclick="window.location = 'http://'+location.hostname+'/led1/off'">off</button>
   <h3>Led 2</h3>
-  <button onclick="window.location = 'http://+'location.hostname+'/led2/on'">on</button>
-  <button onclick="window.location = 'http://+'location.hostname+'/led2/off'">off</button>
+  <button onclick="window.location = 'http://'+location.hostname+'/led2/on'">on</button>
+  <button onclick="window.location = 'http://'+location.hostname+'/led2/off'">off</button>
 </center>
 </body>
 </html>
@@ -52,12 +54,45 @@ char webpage[] PROGMEM = R"=====(
 //---------------------------------------------------------------------------
 //WiFiServer server(8086); //CASO OCORRA PROBLEMAS COM A PORTA 80, UTILIZE OUTRA (EX:8082,8089) E A CHAMADA DA URL FICARÁ IP:PORTA(EX: 192.168.0.15:8082)
 AsyncWebServer server(80); // server port 80
-
+WebSocketsServer websockets(81);
 //---------------Page Not found-------------------------------------------
 void notFound(AsyncWebServerRequest *request)
 {
   request->send(404, "text/plain", "Page Not found");
 }
+void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
+
+  switch (type) 
+  {
+    case WStype_DISCONNECTED:
+      Serial.printf("[%u] Disconnected!\n", num);
+      break;
+    case WStype_CONNECTED: {
+        IPAddress ip = websockets.remoteIP(num);
+        Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
+
+        // send message to client
+        websockets.sendTXT(num, "Connected from server");
+      }
+      break;
+    case WStype_TEXT:
+      Serial.printf("[%u] get Text: %s\n", num, payload);
+      String message = String((char*)( payload));
+      Serial.println(message);
+      /*  
+      if(message == "LED 1 is OFF"){
+        digitalWrite(LED1,LOW);
+      }
+
+      if(message == "LED 1 is ON"){
+        digitalWrite(LED1,HIGH);
+      }
+*/
+
+
+  }
+}
+
 //---------------void setup-------------------------------------------
 void setup()
 {
@@ -129,8 +164,9 @@ void setup()
   });
   //-------------------------------------------------------------  
   server.onNotFound(notFound);// void notFound
-
   server.begin();  // it will start webserver
+  websockets.begin();
+  websockets.onEvent(webSocketEvent);
 }
 //---------------void loop-------------------------------------------
 void loop()
@@ -142,6 +178,7 @@ void loop()
   Serial.println(celsius);
   delay(2000);                                                          //INTERVALO DE 1 MILISEGUNDO
 
+  websockets.loop();
 /*  
   WiFiClient client = server.available(); //VERIFICA SE ALGUM CLIENTE ESTÁ CONECTADO NO SERVIDOR
   if (!client)
