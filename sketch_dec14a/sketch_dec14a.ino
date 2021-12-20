@@ -10,11 +10,16 @@
 #error "Board not found"
 #endif
 #include <ESPAsyncWebServer.h>
+#include <ArduinoJson.h>
 
 #include <WebSocketsServer.h>
+//---------------------------------------------------------------------------
+//WiFiServer server(8086); //CASO OCORRA PROBLEMAS COM A PORTA 80, UTILIZE OUTRA (EX:8082,8089) E A CHAMADA DA URL FICARÁ IP:PORTA(EX: 192.168.0.15:8082)
+AsyncWebServer server(80); // server port 80
+WebSocketsServer websockets(81);
 //-----------------NTC----------------------------------------------------
-const double VCC = 3.3;             // NodeMCU on board 3.3v vcc
-const double R2 = 10000;            // 10k ohm series resistor
+const double VCC = 2.294;             // NodeMCU on board 3.3v vcc
+const double R2 = 9980;            // 10k ohm series resistor
 const double adc_resolution = 1023; // 10-bit adc
 
 const double A = 0.001129148;   // thermistor equation parameters
@@ -23,11 +28,12 @@ const double C = 0.0000000876741;
 
 
 //---------------------------------------------------------------------------
-#define outputpin A0
-const int ledPin = 2;//---------------Set LED GPIO
+//#define outputpin A0
+//const int ledPin = 2;//---------------Set LED GPIO
 #define LED1 13
-#define LED2 12
+#define LED2 2
 
+/*
 //----------------Login---------------------------------
 const char *ssid = "GL INTERNET_C140";          // WIFI password
 const char *password = "Engenhari@2019"; // ID Password
@@ -35,36 +41,71 @@ const char *password = "Engenhari@2019"; // ID Password
 IPAddress ip(10, 0, 0, 200);
 IPAddress gateway(10, 0, 0, 1);
 IPAddress subnet(255, 255, 255, 0);
-/*
-  //----------------Login---------------------------------
-  const char *ssid = "internet";          // WIFI password
-  const char *password = "123456789"; // ID
-  //----------------IP definition ------------------------
-  IPAddress ip(192,168,0,175);
-  IPAddress gateway(192,168,0,1);
-  IPAddress subnet(255,255,255,0);
 */
+  //----------------Login---------------------------------
+  const char *ssid = "TVC";          // WIFI password
+  const char *password = "504b2014"; // ID
+  //----------------IP definition ------------------------
+  IPAddress ip(192,168,10,175);
+  IPAddress gateway(192,168,1,1);
+  IPAddress subnet(255,255,255,0);
+
 //----------------Web Page----------------------------------------
 char webpage[] PROGMEM = R"=====(
 <!DOCTYPE html>
 <html>
+<script>
+var connection = new WebSocket('ws://'+location.hostname+':81/');
+var button_1_status = 0;
+var button_2_status = 0;
+function button_1_on()
+{ 
+  window.location = 'http://'+location.hostname+'/led1/on';
+  button_1_status = 1; 
+  //console.log("LED 1 is ON");
+  connection.open = () => connection.send("LED 1 is ON!!");
+  send_data();
+}
+function button_1_off()
+{
+  window.location = 'http://'+location.hostname+'/led1/off';
+  button_1_status = 0;
+  //console.log("LED 1 is OFF");
+  connection.open = () => connection.send("LED 1 is OFF!!");
+  send_data();  
+}
+function button_2_on()
+{ 
+  console.log("LED 2 is ON");
+}
+function button_2_off()
+{
+  console.log("LED 2 is OFF");
+}
+function send_data()
+{
+  var full_data = '{"LED1" :'+button_1_status+',"LED2":'+button_2_status+'}';
+  connection.open = () => connection.send(full_data);
+}
+</script>
 <body>
 <center>
 <h1>Teste<h1>
   <h3>Led 1</h3>
-  <button onclick="window.location = 'http://'+location.hostname+'/led1/on'">on</button>
-  <button onclick="window.location = 'http://'+location.hostname+'/led1/off'">off</button>
+  <button onclick= "button_1_on()" >On</button><button onclick="button_1_off()" >Off</button>
+
   <h3>Led 2</h3>
-  <button onclick="window.location = 'http://'+location.hostname+'/led2/on'">on</button>
-  <button onclick="window.location = 'http://'+location.hostname+'/led2/off'">off</button>
+  <button onclick="window.location = 'http://'+location.hostname+'/led2/on';button_2_on">on</button>
+  <button onclick="window.location = 'http://'+location.hostname+'/led2/off';button_2_off">off</button>
+  
+  <p id="demo"></p>
 </center>
 </body>
 </html>
+
 )=====";
-//---------------------------------------------------------------------------
-//WiFiServer server(8086); //CASO OCORRA PROBLEMAS COM A PORTA 80, UTILIZE OUTRA (EX:8082,8089) E A CHAMADA DA URL FICARÁ IP:PORTA(EX: 192.168.0.15:8082)
-AsyncWebServer server(80); // server port 80
-WebSocketsServer websockets(81);
+  //<button onclick="window.location = 'http://'+location.hostname+'/led1/on'">on</button>
+  //<button onclick="window.location = 'http://'+location.hostname+'/led1/off'">off</button>
 //---------------Page Not found-------------------------------------------
 void notFound(AsyncWebServerRequest *request)
 {
@@ -89,17 +130,21 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
       Serial.printf("[%u] get Text: %s\n", num, payload);
       String message = String((char*)( payload));
       Serial.println(message);
-      /*  
-      if(message == "LED 1 is OFF"){
-        digitalWrite(LED1,LOW);
-      }
-
-      if(message == "LED 1 is ON"){
-        digitalWrite(LED1,HIGH);
-      }
-*/
-
-
+      
+     DynamicJsonDocument doc(200);
+    // deserialize the data
+    DeserializationError error = deserializeJson(doc, message);
+    // parse the parameters we expect to receive (TO-DO: error handling)
+      // Test if parsing succeeds.
+  if (error) {
+    Serial.print("deserializeJson() failed: ");
+    Serial.println(error.c_str());
+    return;
+  }
+   int LED1_status = doc["LED1"];
+  int LED2_status = doc["LED2"];
+  digitalWrite(LED1,LED1_status);
+  digitalWrite(LED2,LED2_status);
   }
 }
 
@@ -107,10 +152,10 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
 void setup()
 {
   Serial.begin(115200);
-  pinMode(2, OUTPUT); // Led
+  //pinMode(2, OUTPUT); // Led
   pinMode(LED1,OUTPUT);
   pinMode(LED2,OUTPUT); 
-  pinMode(outputpin,INPUT);
+  //pinMode(outputpin,INPUT);
   
   delay(10);            //INTERVALO DE 10 MILISEGUNDOS
 
@@ -182,6 +227,7 @@ void setup()
 void loop()
 {
   /*
+  //-----------------LM#%--------------------------------------------------
   int analogValue = analogRead(outputpin);
   float millivolts = (analogValue / 1024.0) * 3300; //3300 is the voltage provided by NodeMCU
   float celsius = millivolts / 10;
@@ -196,7 +242,6 @@ void loop()
   adc_value = analogRead(A0);
   Vout = (adc_value * VCC) / adc_resolution;
   Rth = (VCC * R2 / Vout) - R2;
-
 /*  Steinhart-Hart Thermistor Equation:
  *  Temperature in Kelvin = 1 / (A + B[ln(R)] + C[ln(R)]^3)
  *  where A = 0.001129148, B = 0.000234125 and C = 8.76741*10^-8  */
@@ -206,7 +251,7 @@ void loop()
   Serial.print("Temperature = ");
   Serial.print(temperature);
   Serial.println(" degree celsius");
-  delay(500);
+  delay(5000);
 /*  
   WiFiClient client = server.available(); //VERIFICA SE ALGUM CLIENTE ESTÁ CONECTADO NO SERVIDOR
   if (!client)
@@ -220,23 +265,4 @@ void loop()
     delay(1); //INTERVALO DE 1 MILISEGUNDO
   }
   */
-  //---------------------------------------------------------------------------------------------------
-  /*
-  String request = client.readStringUntil('\r'); //FAZ A LEITURA DA PRIMEIRA LINHA DA REQUISIÇÃO
-  Serial.println(request);                       //ESCREVE A REQUISIÇÃO NA SERIAL
-  client.flush();                                //AGUARDA ATÉ QUE TODOS OS DADOS DE SAÍDA SEJAM ENVIADOS AO CLIENTE
-
-  client.println("HTTP/1.1 200 OK");         //ESCREVE PARA O CLIENTE A VERSÃO DO HTTP
-  client.println("Content-Type: text/html"); //ESCREVE PARA O CLIENTE O TIPO DE CONTEÚDO(texto/html)
-  client.println("");
-  client.println("<!DOCTYPE HTML>");                                 //INFORMA AO NAVEGADOR A ESPECIFICAÇÃO DO HTML
-  client.println("<head>"); 
-  client.println("<title>ESP8266</title>"); 
-  client.println("</head>"); 
-  client.println("<html>");                                          //ABRE A TAG "html"
-  client.println("<h1><center><font size='4'>Transmissor Digital</center></h1>");
-  client.println("<center><font size='3'>Temperatura: " + String(celsius) + "C</center>"); //ESCREVE "Seja bem vindo!" NA PÁGINA
-  client.println("</html>");                                         //FECHA A TAG "html"
-*/
-//---------------------------------------------------------------------------------------------------
 }

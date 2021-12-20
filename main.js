@@ -1,20 +1,3 @@
-const updateTemp = document.querySelector('#section1 .tabcontent')
-
-setInterval(displayUpdateTemp, 4000)
-
-function displayUpdateTemp() {
-  document.getElementsByClassName('div2').innerHTML = updateTemp
-}
-
-window.setInterval(function () {
-  reloadIFrame()
-}, 100)
-
-function reloadIFrame() {
-  console.log('reloading..')
-  document.getElementById('sup1').contentWindow.location.reload()
-  var t = setTimeout(refreshIFrame, 300)
-}
 //-----------Tabs----------------------------------------------
 function openCity(evt, cityName) {
   var i, tabcontent, tablinks
