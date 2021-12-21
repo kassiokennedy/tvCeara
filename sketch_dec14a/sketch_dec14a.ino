@@ -13,10 +13,11 @@
 #include <ArduinoJson.h>
 
 #include <WebSocketsServer.h>
-//---------------------------------------------------------------------------
+//-------------------WEB-----------------------------------------------------
 //WiFiServer server(8086); //CASO OCORRA PROBLEMAS COM A PORTA 80, UTILIZE OUTRA (EX:8082,8089) E A CHAMADA DA URL FICARÁ IP:PORTA(EX: 192.168.0.15:8082)
 AsyncWebServer server(80); // server port 80
 WebSocketsServer websockets(81);
+
 //-----------------NTC----------------------------------------------------
 const double VCC = 2.294;             // NodeMCU on board 3.3v vcc
 const double R2 = 9980;            // 10k ohm series resistor
@@ -44,13 +45,14 @@ IPAddress subnet(255, 255, 255, 0);
 */
   //----------------Login---------------------------------
   const char *ssid = "TVC";          // WIFI password
-  const char *password = "504b2014"; // ID
+  const char *password = "504b2014"; // ID  
   //----------------IP definition ------------------------
   IPAddress ip(192,168,10,175);
   IPAddress gateway(192,168,1,1);
   IPAddress subnet(255,255,255,0);
-
-//----------------Web Page----------------------------------------
+//---------------------------------------------------------------------
+//----------------Web Page---------------------------------------------
+//---------------------------------------------------------------------
 char webpage[] PROGMEM = R"=====(
 <!DOCTYPE html>
 <html>
@@ -63,7 +65,7 @@ function button_1_on()
   window.location = 'http://'+location.hostname+'/led1/on';
   button_1_status = 1; 
   //console.log("LED 1 is ON");
-  connection.open = () => connection.send("LED 1 is ON!!");
+  //connection.open = () => connection.send("LED 1 is ON!!");
   send_data();
 }
 function button_1_off()
@@ -71,7 +73,7 @@ function button_1_off()
   window.location = 'http://'+location.hostname+'/led1/off';
   button_1_status = 0;
   //console.log("LED 1 is OFF");
-  connection.open = () => connection.send("LED 1 is OFF!!");
+  //connection.open = () => connection.send("LED 1 is OFF!!");
   send_data();  
 }
 function button_2_on()
@@ -106,11 +108,16 @@ function send_data()
 )=====";
   //<button onclick="window.location = 'http://'+location.hostname+'/led1/on'">on</button>
   //<button onclick="window.location = 'http://'+location.hostname+'/led1/off'">off</button>
-//---------------Page Not found-------------------------------------------
+//--------------------------------------------------------------------
+//---------------Page Not found---------------------------------------
+//--------------------------------------------------------------------
 void notFound(AsyncWebServerRequest *request)
 {
   request->send(404, "text/plain", "Page Not found");
 }
+//--------------------------------------------------------------------
+//--------------------------------------------------------------------
+//--------------------------------------------------------------------
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
 
   switch (type) 
@@ -136,19 +143,20 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
     DeserializationError error = deserializeJson(doc, message);
     // parse the parameters we expect to receive (TO-DO: error handling)
       // Test if parsing succeeds.
-  if (error) {
+    if (error) {
     Serial.print("deserializeJson() failed: ");
     Serial.println(error.c_str());
     return;
-  }
-   int LED1_status = doc["LED1"];
-  int LED2_status = doc["LED2"];
-  digitalWrite(LED1,LED1_status);
-  digitalWrite(LED2,LED2_status);
-  }
+    }
+    int LED1_status = doc["LED1"];
+    int LED2_status = doc["LED2"];
+    digitalWrite(LED1,LED1_status);
+    digitalWrite(LED2,LED2_status);
+    }
 }
-
+//--------------------------------------------------------------------
 //---------------void setup-------------------------------------------
+//--------------------------------------------------------------------
 void setup()
 {
   Serial.begin(115200);
@@ -156,8 +164,6 @@ void setup()
   pinMode(LED1,OUTPUT);
   pinMode(LED2,OUTPUT); 
   //pinMode(outputpin,INPUT);
-  
-  delay(10);            //INTERVALO DE 10 MILISEGUNDOS
 
   Serial.println("");            //PULA UMA LINHA NA JANELA SERIAL
   Serial.print("Conectando a "); 
@@ -170,7 +176,7 @@ void setup()
     delay(50);        //INTERVALO DE 500 MILISEGUNDOS
     Serial.print("."); //ESCREVE O CARACTER NA SERIAL
   }
-
+  
   Serial.println("");                        //PULA UMA LINHA NA JANELA SERIAL
   Serial.print("Conectado a rede sem fio "); //ESCREVE O TEXTO NA SERIAL
   Serial.println(ssid);                      //ESCREVE O NOME DA REDE NA SERIAL
@@ -182,7 +188,13 @@ void setup()
   Serial.print("NodeMCU IP: "); //ESCREVE O TEXTO NA SERIAL
   Serial.print("http://");                          //ESCREVE O TEXTO NA SERIAL
   Serial.println(WiFi.localIP());                   //ESCREVE NA SERIAL O IP RECEBIDO DENTRO DA REDE SEM FIO (O IP NESSA PRÁTICA É RECEBIDO DE FORMA AUTOMÁTICA)
-
+  Serial.println("");
+  WiFi.softAP("ESP8266", "");
+  //WiFi.softAP(ssidAP,passwordAP);
+  Serial.println("softap");
+  Serial.println("");
+  Serial.println(WiFi.softAPIP());
+  
   if (MDNS.begin("ESP")) { //esp.local/
       Serial.println("MDNS responder started");
   }
@@ -223,46 +235,21 @@ void setup()
   websockets.begin();
   websockets.onEvent(webSocketEvent);
 }
+//-------------------------------------------------------------------
 //---------------void loop-------------------------------------------
+//-------------------------------------------------------------------
 void loop()
 {
-  /*
-  //-----------------LM#%--------------------------------------------------
-  int analogValue = analogRead(outputpin);
-  float millivolts = (analogValue / 1024.0) * 3300; //3300 is the voltage provided by NodeMCU
-  float celsius = millivolts / 10;
-  Serial.print("in DegreeC=   ");
-  Serial.println(celsius);
-  delay(2000);                                                          //INTERVALO DE 1 MILISEGUNDO
-  */
   websockets.loop();
   //-----------------NTC----------------------------------------------------
   double Vout, Rth, temperature, adc_value; 
-
   adc_value = analogRead(A0);
   Vout = (adc_value * VCC) / adc_resolution;
   Rth = (VCC * R2 / Vout) - R2;
-/*  Steinhart-Hart Thermistor Equation:
- *  Temperature in Kelvin = 1 / (A + B[ln(R)] + C[ln(R)]^3)
- *  where A = 0.001129148, B = 0.000234125 and C = 8.76741*10^-8  */
   temperature = (1 / (A + (B * log(Rth)) + (C * pow((log(Rth)),3))));   // Temperature in kelvin
-
   temperature = temperature - 273.15;  // Temperature in degree celsius
   Serial.print("Temperature = ");
   Serial.print(temperature);
-  Serial.println(" degree celsius");
+  Serial.println(" *C");
   delay(5000);
-/*  
-  WiFiClient client = server.available(); //VERIFICA SE ALGUM CLIENTE ESTÁ CONECTADO NO SERVIDOR
-  if (!client)
-  {         //SE NÃO EXISTIR CLIENTE CONECTADO, FAZ
-    return; //REEXECUTA O PROCESSO ATÉ QUE ALGUM CLIENTE SE CONECTE AO SERVIDOR
-  }
-/*
-  Serial.println("Novo cliente se conectou!"); //ESCREVE O TEXTO NA SERIAL
-  while (!client.available())
-  {           //ENQUANTO CLIENTE ESTIVER CONECTADO
-    delay(1); //INTERVALO DE 1 MILISEGUNDO
-  }
-  */
 }
