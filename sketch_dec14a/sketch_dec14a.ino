@@ -1,5 +1,5 @@
 //https://blogmasterwalkershop.com.br/embarcados/nodemcu/nodemcu-como-criar-um-web-server-e-conectar-a-uma-rede-wifi
-
+//https://www.javascripttutorial.net/javascript-fetch-api/
 #ifdef ESP8266
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
@@ -25,8 +25,7 @@ const double adc_resolution = 1023; // 10-bit adc
 
 const double A = 0.001129148;   // thermistor equation parameters
 const double B = 0.000234125;
-const double C = 0.0000000876741; 
-
+const double C = 0.0000000876741;
 
 //---------------------------------------------------------------------------
 //#define outputpin A0
@@ -34,7 +33,7 @@ const double C = 0.0000000876741;
 #define LED1 13
 #define LED2 2
 
-/*
+
 //----------------Login---------------------------------
 const char *ssid = "GL INTERNET_C140";          // WIFI password
 const char *password = "Engenhari@2019"; // ID Password
@@ -42,14 +41,15 @@ const char *password = "Engenhari@2019"; // ID Password
 IPAddress ip(10, 0, 0, 200);
 IPAddress gateway(10, 0, 0, 1);
 IPAddress subnet(255, 255, 255, 0);
-*/
+/*
   //----------------Login---------------------------------
   const char *ssid = "TVC";          // WIFI password
-  const char *password = "504b2014"; // ID  
+  const char *password = "504b2014"; // ID
   //----------------IP definition ------------------------
-  IPAddress ip(192,168,10,175);
-  IPAddress gateway(192,168,1,1);
-  IPAddress subnet(255,255,255,0);
+  IPAddress ip(192, 168, 10, 175);
+  IPAddress gateway(192, 168, 1, 1);
+  IPAddress subnet(255, 255, 255, 0);
+*/
 //---------------------------------------------------------------------
 //----------------Web Page---------------------------------------------
 //---------------------------------------------------------------------
@@ -92,22 +92,18 @@ function send_data()
 </script>
 <body>
 <center>
+<form action="get"> </form>
 <h1>Teste<h1>
   <h3>Led 1</h3>
   <button onclick= "button_1_on()" >On</button><button onclick="button_1_off()" >Off</button>
-
   <h3>Led 2</h3>
-  <button onclick="window.location = 'http://'+location.hostname+'/led2/on';button_2_on">on</button>
-  <button onclick="window.location = 'http://'+location.hostname+'/led2/off';button_2_off">off</button>
-  
-  <p id="demo"></p>
+  <button onclick="window.location = 'http://'+location.hostname+'/led2/off';button_2_on">On</button>
+  <button onclick="window.location = 'http://'+location.hostname+'/led2/on';button_2_off">Off</button>
 </center>
 </body>
 </html>
 
 )=====";
-  //<button onclick="window.location = 'http://'+location.hostname+'/led1/on'">on</button>
-  //<button onclick="window.location = 'http://'+location.hostname+'/led1/off'">off</button>
 //--------------------------------------------------------------------
 //---------------Page Not found---------------------------------------
 //--------------------------------------------------------------------
@@ -128,7 +124,6 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
     case WStype_CONNECTED: {
         IPAddress ip = websockets.remoteIP(num);
         Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
-
         // send message to client
         websockets.sendTXT(num, "Connected from server");
       }
@@ -154,13 +149,26 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
     digitalWrite(LED2,LED2_status);
     }
 }
+ //-----------------NTC----------------------------------------------------
+void temp ()
+{
+  double Vout, Rth, temperature, adc_value; 
+  adc_value = analogRead(A0);
+  Vout = (adc_value * VCC) / adc_resolution;
+  Rth = (VCC * R2 / Vout) - R2;
+  temperature = (1 / (A + (B * log(Rth)) + (C * pow((log(Rth)),3))));   // Temperature in kelvin
+  temperature = temperature - 273.15;  // Temperature in degree celsius
+  Serial.print("Temperature = ");
+  Serial.print(temperature);
+  Serial.println(" *C");
+  delay(5000);
+  }
 //--------------------------------------------------------------------
 //---------------void setup-------------------------------------------
 //--------------------------------------------------------------------
 void setup()
 {
   Serial.begin(115200);
-  //pinMode(2, OUTPUT); // Led
   pinMode(LED1,OUTPUT);
   pinMode(LED2,OUTPUT); 
   //pinMode(outputpin,INPUT);
@@ -176,7 +184,6 @@ void setup()
     delay(50);        //INTERVALO DE 500 MILISEGUNDOS
     Serial.print("."); //ESCREVE O CARACTER NA SERIAL
   }
-  
   Serial.println("");                        //PULA UMA LINHA NA JANELA SERIAL
   Serial.print("Conectado a rede sem fio "); //ESCREVE O TEXTO NA SERIAL
   Serial.println(ssid);                      //ESCREVE O NOME DA REDE NA SERIAL
@@ -194,15 +201,24 @@ void setup()
   Serial.println("softap");
   Serial.println("");
   Serial.println(WiFi.softAPIP());
-  
+  /*
   if (MDNS.begin("ESP")) { //esp.local/
       Serial.println("MDNS responder started");
   }
+  */
+  /*
   //------------------server----------------------------------
    server.on("/", [](AsyncWebServerRequest * request)
   { 
    String message = "hello world"; 
    
+  request->send_P(200, "text/html", webpage);
+  });
+  */
+   //-----------------------------------------------------------
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest * request)
+  { 
+  //analogRead(outputpin);  
   request->send_P(200, "text/html", webpage);
   });
   //------------------Led 1------------------------------------
@@ -241,15 +257,7 @@ void setup()
 void loop()
 {
   websockets.loop();
-  //-----------------NTC----------------------------------------------------
-  double Vout, Rth, temperature, adc_value; 
-  adc_value = analogRead(A0);
-  Vout = (adc_value * VCC) / adc_resolution;
-  Rth = (VCC * R2 / Vout) - R2;
-  temperature = (1 / (A + (B * log(Rth)) + (C * pow((log(Rth)),3))));   // Temperature in kelvin
-  temperature = temperature - 273.15;  // Temperature in degree celsius
-  Serial.print("Temperature = ");
-  Serial.print(temperature);
-  Serial.println(" *C");
-  delay(5000);
+  temp();
 }
+
+  
