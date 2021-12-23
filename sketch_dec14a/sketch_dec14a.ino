@@ -27,38 +27,29 @@ const double adc_resolution = 1023; // 10-bit adc
 const double A = 0.001129148; // thermistor equation parameters
 const double B = 0.000234125;
 const double C = 0.0000000876741;
-<<<<<<< HEAD
-== == == =
-
->>>>>>> 6e7d66bb4678d0ee7ace47c5b61ca15fc902a059
-
 //---------------------------------------------------------------------------
 //#define outputpin A0
 // const int ledPin = 2;//---------------Set LED GPIO
 #define LED1 13
 #define LED2 2
 
-<<<<<<< HEAD
+/*
+  //----------------Login---------------------------------
+  const char *ssid = "GL INTERNET_C140";          // WIFI password
+  const char *password = "Engenhari@2019"; // ID Password
+  //----------------IP definition ------------------------
+  IPAddress ip(10, 0, 0, 200);
+  IPAddress gateway(10, 0, 0, 1);
+  IPAddress subnet(255, 255, 255, 0);
+*/
 
-             == == == =
-                          /*
-                            //----------------Login---------------------------------
-                            const char *ssid = "GL INTERNET_C140";          // WIFI password
-                            const char *password = "Engenhari@2019"; // ID Password
-                            //----------------IP definition ------------------------
-                            IPAddress ip(10, 0, 0, 200);
-                            IPAddress gateway(10, 0, 0, 1);
-                            IPAddress subnet(255, 255, 255, 0);
-                          */
->>>>>>> 6e7d66bb4678d0ee7ace47c5b61ca15fc902a059
-    //----------------Login---------------------------------
-    const char *ssid = "TVC";      // WIFI password
+//----------------Login---------------------------------
+const char *ssid = "TVC";      // WIFI password
 const char *password = "504b2014"; // ID
 //----------------IP definition ------------------------
 IPAddress ip(192, 168, 10, 175);
 IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 255, 0);
-<<<<<<< HEAD
 /*
   //----------------Login---------------------------------
   const char *ssid = "TVC";          // WIFI password
@@ -68,63 +59,60 @@ IPAddress subnet(255, 255, 255, 0);
   IPAddress gateway(192, 168, 1, 1);
   IPAddress subnet(255, 255, 255, 0);
 */
-== == == =
->>>>>>> 6e7d66bb4678d0ee7ace47c5b61ca15fc902a059
-             //---------------------------------------------------------------------
-             //----------------Web Page---------------------------------------------
-             //---------------------------------------------------------------------
-    char webpage[] PROGMEM = R"=====(
+//---------------------------------------------------------------------
+//----------------Web Page---------------------------------------------
+//---------------------------------------------------------------------
+char webpage[] PROGMEM = R"=====(
 <!DOCTYPE html>
 <html>
-<script>
-var connection = new WebSocket('ws://'+location.hostname+':81/');
-var button_1_status = 0;
-var button_2_status = 0;
-function button_1_on()
-{ 
-  window.location = 'http://'+location.hostname+'/led1/on';
-  button_1_status = 1; 
-  //console.log("LED 1 is ON");
-  //connection.open = () => connection.send("LED 1 is ON!!");
-  send_data();
-}
-function button_1_off()
-{
-  window.location = 'http://'+location.hostname+'/led1/off';
-  button_1_status = 0;
-  //console.log("LED 1 is OFF");
-  //connection.open = () => connection.send("LED 1 is OFF!!");
-  send_data();  
-}
-function button_2_on()
-{ 
-  console.log("LED 2 is ON");
-}
-function button_2_off()
-{
-  console.log("LED 2 is OFF");
-}
-function send_data()
-{
-  var full_data = '{"LED1" :'+button_1_status+',"LED2":'+button_2_status+'}';
-  connection.open = () => connection.send(full_data);
-}
-</script>
-<body>
-<center>
-<form action="get"> </form>
-<h1>Teste<h1>
-  <h3>Led 1</h3>
-  <button onclick= "button_1_on()" >On</button><button onclick="button_1_off()" >Off</button>
-  <h3>Led 2</h3>
-  <button onclick="window.location = 'http://'+location.hostname+'/led2/off';button_2_on">On</button>
-  <button onclick="window.location = 'http://'+location.hostname+'/led2/on';button_2_off">Off</button>
-<<<<<<< HEAD
-=======
- <form action="/get">input1: <input type="text" name="input1"><input type="submit" value="Submit"></form><br>
->>>>>>> 6e7d66bb4678d0ee7ace47c5b61ca15fc902a059
-</center>
-</body>
+  <head>
+    <script>
+      var connection = new WebSocket('ws://' + location.hostname + ':81/')
+      var button_1_status = 0
+      var button_2_status = 0
+      function button_1_on() {
+        window.location = 'http://' + location.hostname + '/led1/on'
+        button_1_status = 1
+        //console.log("LED 1 is ON");
+        //connection.open = () => connection.send("LED 1 is ON!!");
+        send_data()
+      }
+      function button_1_off() {
+        window.location = 'http://' + location.hostname + '/led1/off'
+        button_1_status = 0
+        //console.log("LED 1 is OFF");
+        //connection.open = () => connection.send("LED 1 is OFF!!");
+        send_data()
+      }
+      function button_2_on() {
+        console.log('LED 2 is ON')
+      }
+      function button_2_off() {
+        console.log('LED 2 is OFF')
+      }
+      function send_data() {
+        var full_data =
+          '{"LED1" :' + button_1_status + ',"LED2":' + button_2_status + '}'
+        connection.open = () => connection.send(full_data)
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Teste</h1>
+    <h3>Led 1</h3>
+    <button onclick="button_1_on()">On</button>
+    <button onclick="button_1_off()">Off</button>
+    <button
+      onclick="window.location='http://+location.hostname+'/led2/off;button_2_on"
+    >
+      On
+    </button>
+    <button
+      onclick="window.location = 'http://'+location.hostname+'/led2/on';button_2_off"
+    >
+      Off
+    </button>
+  </body>
 </html>
 
 )=====";

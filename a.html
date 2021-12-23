@@ -1,47 +1,51 @@
 <!DOCTYPE html>
 <html>
-<script>
-var connection = new WebSocket('ws://'+location.hostname+':81/');
-var button_1_status = 0;
-var button_2_status = 0;
-function button_1_on()
-{ 
-  window.location = 'http://'+location.hostname+'/led1/on';
-  button_1_status = 1; 
-  //console.log("LED 1 is ON");
-  //connection.open = () => connection.send("LED 1 is ON!!");
-  send_data();
-}
-function button_1_off()
-{
-  window.location = 'http://'+location.hostname+'/led1/off';
-  button_1_status = 0;
-  //console.log("LED 1 is OFF");
-  //connection.open = () => connection.send("LED 1 is OFF!!");
-  send_data();  
-}
-function button_2_on()
-{ 
-  console.log("LED 2 is ON");
-}
-function button_2_off()
-{
-  console.log("LED 2 is OFF");
-}
-function send_data()
-{
-  var full_data = '{"LED1" :'+button_1_status+',"LED2":'+button_2_status+'}';
-  connection.open = () => connection.send(full_data);
-}
-</script>
-<body>
-<form action="get"> </form>
-<h1>Teste<h1>
-  <h3>Led 1</h3>
-  <button onclick= "button_1_on()" >On</button><button onclick="button_1_off()" >Off</button>
-  <h3>Led 2</h3>
-  <button onclick="window.location = 'http://'+location.hostname+'/led2/off';button_2_on">On</button>
-  <button onclick="window.location = 'http://'+location.hostname+'/led2/on';button_2_off">Off</button>
-
-</body>
+  <head>
+    <script>
+      var connection = new WebSocket('ws://' + location.hostname + ':81/')
+      var button_1_status = 0
+      var button_2_status = 0
+      function button_1_on() {
+        window.location = 'http://' + location.hostname + '/led1/on'
+        button_1_status = 1
+        //console.log("LED 1 is ON");
+        //connection.open = () => connection.send("LED 1 is ON!!");
+        send_data()
+      }
+      function button_1_off() {
+        window.location = 'http://' + location.hostname + '/led1/off'
+        button_1_status = 0
+        //console.log("LED 1 is OFF");
+        //connection.open = () => connection.send("LED 1 is OFF!!");
+        send_data()
+      }
+      function button_2_on() {
+        console.log('LED 2 is ON')
+      }
+      function button_2_off() {
+        console.log('LED 2 is OFF')
+      }
+      function send_data() {
+        var full_data =
+          '{"LED1" :' + button_1_status + ',"LED2":' + button_2_status + '}'
+        connection.open = () => connection.send(full_data)
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Teste</h1>
+    <h3>Led 1</h3>
+    <button onclick="button_1_on()">On</button>
+    <button onclick="button_1_off()">Off</button>
+    <button
+      onclick="window.location='http://+location.hostname+'/led2/off;button_2_on"
+    >
+      On
+    </button>
+    <button
+      onclick="window.location = 'http://'+location.hostname+'/led2/on';button_2_off"
+    >
+      Off
+    </button>
+  </body>
 </html>
