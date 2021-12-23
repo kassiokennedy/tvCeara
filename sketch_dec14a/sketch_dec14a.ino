@@ -1,6 +1,5 @@
-// https://blogmasterwalkershop.com.br/embarcados/nodemcu/nodemcu-como-criar-um-web-server-e-conectar-a-uma-rede-wifi
+//https://blogmasterwalkershop.com.br/embarcados/nodemcu/nodemcu-como-criar-um-web-server-e-conectar-a-uma-rede-wifi
 // https://www.javascripttutorial.net/javascript-fetch-api/
-//---------------------------------------------------------------------------
 #ifdef ESP8266
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
@@ -12,27 +11,25 @@
 #endif
 #include <ESPAsyncWebServer.h>
 #include <ArduinoJson.h>
-
 #include <WebSocketsServer.h>
 //-------------------WEB-----------------------------------------------------
-// WiFiServer server(8086); //CASO OCORRA PROBLEMAS COM A PORTA 80, UTILIZE OUTRA (EX:8082,8089) E A CHAMADA DA URL FICARÁ IP:PORTA(EX: 192.168.0.15:8082)
+//WiFiServer server(8086); //CASO OCORRA PROBLEMAS COM A PORTA 80, UTILIZE OUTRA (EX:8082,8089) E A CHAMADA DA URL FICARÁ IP:PORTA(EX: 192.168.0.15:8082)
 AsyncWebServer server(80); // server port 80
 WebSocketsServer websockets(81);
 
 //-----------------NTC----------------------------------------------------
-const double VCC = 2.294;           // NodeMCU on board 3.3v vcc
-const double R2 = 9980;             // 10k ohm series resistor
+const double VCC = 2.294;             // NodeMCU on board 3.3v vcc
+const double R2 = 9980;            // 10k ohm series resistor
 const double adc_resolution = 1023; // 10-bit adc
 
-const double A = 0.001129148; // thermistor equation parameters
+const double A = 0.001129148;   // thermistor equation parameters
 const double B = 0.000234125;
 const double C = 0.0000000876741;
 //---------------------------------------------------------------------------
 //#define outputpin A0
-// const int ledPin = 2;//---------------Set LED GPIO
+//const int ledPin = 2;//---------------Set LED GPIO
 #define LED1 13
 #define LED2 2
-
 /*
   //----------------Login---------------------------------
   const char *ssid = "GL INTERNET_C140";          // WIFI password
@@ -42,77 +39,97 @@ const double C = 0.0000000876741;
   IPAddress gateway(10, 0, 0, 1);
   IPAddress subnet(255, 255, 255, 0);
 */
-
 //----------------Login---------------------------------
-const char *ssid = "TVC";      // WIFI password
+const char *ssid = "TVC";          // WIFI password
 const char *password = "504b2014"; // ID
 //----------------IP definition ------------------------
 IPAddress ip(192, 168, 10, 175);
 IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 255, 0);
-/*
-  //----------------Login---------------------------------
-  const char *ssid = "TVC";          // WIFI password
-  const char *password = "504b2014"; // ID
-  //----------------IP definition ------------------------
-  IPAddress ip(192, 168, 10, 175);
-  IPAddress gateway(192, 168, 1, 1);
-  IPAddress subnet(255, 255, 255, 0);
-*/
 //---------------------------------------------------------------------
 //----------------Web Page---------------------------------------------
 //---------------------------------------------------------------------
 char webpage[] PROGMEM = R"=====(
 <!DOCTYPE html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  <style>
+    html {
+     font-family: Arial;
+     display: inline-block;
+     margin: 0px auto;
+     text-align: center;
+    }
+    h2 { font-size: 3.0rem; }
+    p { font-size: 3.0rem; }
+    .units { font-size: 1.2rem; }
+    .dht-labels{
+      font-size: 1.5rem;
+      vertical-align:middle;
+      padding-bottom: 15px;
+    }
+  </style>
+</head>
 <html>
-  <head>
-    <script>
-      var connection = new WebSocket('ws://' + location.hostname + ':81/')
-      var button_1_status = 0
-      var button_2_status = 0
-      function button_1_on() {
-        window.location = 'http://' + location.hostname + '/led1/on'
-        button_1_status = 1
-        //console.log("LED 1 is ON");
-        //connection.open = () => connection.send("LED 1 is ON!!");
-        send_data()
-      }
-      function button_1_off() {
-        window.location = 'http://' + location.hostname + '/led1/off'
-        button_1_status = 0
-        //console.log("LED 1 is OFF");
-        //connection.open = () => connection.send("LED 1 is OFF!!");
-        send_data()
-      }
-      function button_2_on() {
-        console.log('LED 2 is ON')
-      }
-      function button_2_off() {
-        console.log('LED 2 is OFF')
-      }
-      function send_data() {
-        var full_data =
-          '{"LED1" :' + button_1_status + ',"LED2":' + button_2_status + '}'
-        connection.open = () => connection.send(full_data)
-      }
-    </script>
-  </head>
-  <body>
-    <h1>Teste</h1>
-    <h3>Led 1</h3>
-    <button onclick="button_1_on()">On</button>
-    <button onclick="button_1_off()">Off</button>
-    <button
-      onclick="window.location='http://+location.hostname+'/led2/off;button_2_on"
-    >
-      On
-    </button>
-    <button
-      onclick="window.location = 'http://'+location.hostname+'/led2/on';button_2_off"
-    >
-      Off
-    </button>
-  </body>
+<script>
+var connection = new WebSocket('ws://'+location.hostname+':81/');
+var button_1_status = 0;
+var button_2_status = 0;
+function button_1_on()
+{ 
+  window.location = 'http://'+location.hostname+'/led1/on';
+  button_1_status = 1; 
+  //console.log("LED 1 is ON");
+  //connection.open = () => connection.send("LED 1 is ON!!");
+  send_data();
+}
+function button_1_off()
+{
+  window.location = 'http://'+location.hostname+'/led1/off';
+  button_1_status = 0;
+  //console.log("LED 1 is OFF");
+  //connection.open = () => connection.send("LED 1 is OFF!!");
+  send_data();  
+}
+function button_2_on()
+{ 
+  console.log("LED 2 is ON");
+}
+function button_2_off()
+{
+  console.log("LED 2 is OFF");
+}
+function send_data()
+{
+  var full_data = '{"LED1" :'+button_1_status+',"LED2":'+button_2_status+'}';
+  connection.open = () => connection.send(full_data);
+}
+setInterval(function ( ) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("temperature").innerHTML = this.responseText;
+    }
+  };
+  xhttp.open("GET", "/temperature", true);
+  xhttp.send();
+}, 10000 ) ;
+
+</script>
+<body>
+<center>
+<form action="get"> </form>
+<h1>Teste<h1>
+  <h3>Led 1</h3>
+  <button onclick= "button_1_on()" >On</button><button onclick="button_1_off()" >Off</button>
+  <h3>Led 2</h3>
+  <button onclick="window.location = 'http://'+location.hostname+'/led2/off';button_2_on">On</button>
+  <button onclick="window.location = 'http://'+location.hostname+'/led2/on';button_2_off">Off</button>
+  <h3>------</h3>
+  <span id="temperature">%TEMPERATURE%</span>
+</center>
+</body>
 </html>
 
 )=====";
@@ -126,93 +143,78 @@ void notFound(AsyncWebServerRequest *request)
 //--------------------------------------------------------------------
 //--------------------------------------------------------------------
 //--------------------------------------------------------------------
-void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
-{
+void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
 
-  switch (type)
+  switch (type) 
   {
-  case WStype_DISCONNECTED:
-    Serial.printf("[%u] Disconnected!\n", num);
-    break;
-  case WStype_CONNECTED:
-  {
-    IPAddress ip = websockets.remoteIP(num);
-    Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
-    // send message to client
-    websockets.sendTXT(num, "Connected from server");
-  }
-  break;
-  case WStype_TEXT:
-    Serial.printf("[%u] get Text: %s\n", num, payload);
-    String message = String((char *)(payload));
-    Serial.println(message);
-
-    DynamicJsonDocument doc(200);
+    case WStype_DISCONNECTED:
+      Serial.printf("[%u] Disconnected!\n", num);
+      break;
+    case WStype_CONNECTED: {
+        IPAddress ip = websockets.remoteIP(num);
+        Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
+        // send message to client
+        websockets.sendTXT(num, "Connected from server");
+      }
+      break;
+    case WStype_TEXT:
+      Serial.printf("[%u] get Text: %s\n", num, payload);
+      String message = String((char*)( payload));
+      Serial.println(message);
+      
+     DynamicJsonDocument doc(200);
     // deserialize the data
     DeserializationError error = deserializeJson(doc, message);
     // parse the parameters we expect to receive (TO-DO: error handling)
-    // Test if parsing succeeds.
-    if (error)
-    {
-      Serial.print("deserializeJson() failed: ");
-      Serial.println(error.c_str());
-      return;
+      // Test if parsing succeeds.
+    if (error) {
+    Serial.print("deserializeJson() failed: ");
+    Serial.println(error.c_str());
+    return;
     }
     int LED1_status = doc["LED1"];
     int LED2_status = doc["LED2"];
-    digitalWrite(LED1, LED1_status);
-    digitalWrite(LED2, LED2_status);
-  }
+    digitalWrite(LED1,LED1_status);
+    digitalWrite(LED2,LED2_status);
+    }
 }
-//-----------------NTC----------------------------------------------------
-void temp()
-{
-  double Vout, Rth, temperature, adc_value;
-  adc_value = analogRead(A0);
-  Vout = (adc_value * VCC) / adc_resolution;
-  Rth = (VCC * R2 / Vout) - R2;
-  temperature = (1 / (A + (B * log(Rth)) + (C * pow((log(Rth)), 3)))); // Temperature in kelvin
-  temperature = temperature - 273.15;                                  // Temperature in degree celsius
-  Serial.print("Temperature = ");
-  Serial.print(temperature);
-  Serial.println(" *C");
-  delay(5000);
-}
+ //-----------------NTC----------------------------------------------------
+
 //--------------------------------------------------------------------
 //---------------void setup-------------------------------------------
 //--------------------------------------------------------------------
 void setup()
 {
   Serial.begin(115200);
-  pinMode(LED1, OUTPUT);
-  pinMode(LED2, OUTPUT);
-  // pinMode(outputpin,INPUT);
+  pinMode(LED1,OUTPUT);
+  pinMode(LED2,OUTPUT); 
+  //pinMode(outputpin,INPUT);
 
-  Serial.println(""); // PULA UMA LINHA NA JANELA SERIAL
-  Serial.print("Conectando a ");
-  Serial.print(ssid);
-  WiFi.begin(ssid, password);
+  Serial.println("");            //PULA UMA LINHA NA JANELA SERIAL
+  Serial.print("Conectando a "); 
+  Serial.print(ssid);            
+  WiFi.begin(ssid, password); 
   WiFi.config(ip, gateway, subnet);
-
+  
   while (WiFi.status() != WL_CONNECTED)
-  {                    // ENQUANTO STATUS FOR DIFERENTE DE CONECTADO
-    delay(50);         // INTERVALO DE 500 MILISEGUNDOS
-    Serial.print("."); // ESCREVE O CARACTER NA SERIAL
+  {                    //ENQUANTO STATUS FOR DIFERENTE DE CONECTADO
+    delay(50);        //INTERVALO DE 500 MILISEGUNDOS
+    Serial.print("."); //ESCREVE O CARACTER NA SERIAL
   }
-  Serial.println("");                        // PULA UMA LINHA NA JANELA SERIAL
-  Serial.print("Conectado a rede sem fio "); // ESCREVE O TEXTO NA SERIAL
-  Serial.println(ssid);                      // ESCREVE O NOME DA REDE NA SERIAL
+  Serial.println("");                        //PULA UMA LINHA NA JANELA SERIAL
+  Serial.print("Conectado a rede sem fio "); //ESCREVE O TEXTO NA SERIAL
+  Serial.println(ssid);                      //ESCREVE O NOME DA REDE NA SERIAL
 
-  server.begin(); // INICIA O SERVIDOR PARA RECEBER DADOS NA PORTA DEFINIDA EM "WiFiServer server(porta);"
+  server.begin();                            //INICIA O SERVIDOR PARA RECEBER DADOS NA PORTA DEFINIDA EM "WiFiServer server(porta);"
 
-  Serial.println("Servidor iniciado"); // ESCREVE O TEXTO NA SERIAL
+  Serial.println("Servidor iniciado");       //ESCREVE O TEXTO NA SERIAL
 
-  Serial.print("NodeMCU IP: ");   // ESCREVE O TEXTO NA SERIAL
-  Serial.print("http://");        // ESCREVE O TEXTO NA SERIAL
-  Serial.println(WiFi.localIP()); // ESCREVE NA SERIAL O IP RECEBIDO DENTRO DA REDE SEM FIO (O IP NESSA PRÁTICA É RECEBIDO DE FORMA AUTOMÁTICA)
+  Serial.print("NodeMCU IP: "); //ESCREVE O TEXTO NA SERIAL
+  Serial.print("http://");                          //ESCREVE O TEXTO NA SERIAL
+  Serial.println(WiFi.localIP());                   //ESCREVE NA SERIAL O IP RECEBIDO DENTRO DA REDE SEM FIO (O IP NESSA PRÁTICA É RECEBIDO DE FORMA AUTOMÁTICA)
   Serial.println("");
   WiFi.softAP("ESP8266", "");
-  // WiFi.softAP(ssidAP,passwordAP);
+  //WiFi.softAP(ssidAP,passwordAP);
   Serial.println("softap");
   Serial.println("");
   Serial.println(WiFi.softAPIP());
@@ -221,51 +223,61 @@ void setup()
       Serial.println("MDNS responder started");
   }
   */
-  /*
   //------------------server----------------------------------
    server.on("/", [](AsyncWebServerRequest * request)
-  {
-   String message = "hello world";
-
+  { 
+   String message = "hello world"; 
+   
   request->send_P(200, "text/html", webpage);
   });
-  */
-  //-----------------------------------------------------------
-  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
-            { 
-  //analogRead(outputpin);  
-  request->send_P(200, "text/html", webpage); });
   //------------------Led 1------------------------------------
-  server.on("/led1/on", HTTP_GET, [](AsyncWebServerRequest *request)
-            { 
+   server.on("/led1/on", HTTP_GET, [](AsyncWebServerRequest * request)
+  { 
   digitalWrite(LED1,HIGH);
   //analogRead(outputpin);  
-  request->send_P(200, "text/html", webpage); });
-  server.on("/led1/off", HTTP_GET, [](AsyncWebServerRequest *request)
-            { 
+  request->send_P(200, "text/html", webpage);
+  });
+  server.on("/led1/off", HTTP_GET, [](AsyncWebServerRequest * request)
+  { 
   digitalWrite(LED1,LOW); 
-  request->send_P(200, "text/html", webpage); });
+  request->send_P(200, "text/html", webpage);
+  });
   //------------------Led 2------------------------------------
-  server.on("/led2/on", HTTP_GET, [](AsyncWebServerRequest *request)
-            { 
+   server.on("/led2/on", HTTP_GET, [](AsyncWebServerRequest * request)
+  { 
   digitalWrite(LED2,HIGH);
   //analogRead(outputpin);  
-  request->send_P(200, "text/html", webpage); });
-  server.on("/led2/off", HTTP_GET, [](AsyncWebServerRequest *request)
-            { 
+  request->send_P(200, "text/html", webpage);
+  });
+  server.on("/led2/off", HTTP_GET, [](AsyncWebServerRequest * request)
+  { 
   digitalWrite(LED2,LOW); 
-  request->send_P(200, "text/html", webpage); });
-  //-------------------------------------------------------------
-  server.onNotFound(notFound); // void notFound
-  server.begin();              // it will start webserver
+  request->send_P(200, "text/html", webpage);
+  });
+  //------------------Temperature------------------------------------
+   server.on("/temperature", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/plain", webpage);
+  }); 
+  server.begin();
+  Serial.println("Web server started!");
+   
+  server.onNotFound(notFound);// void notFound
+  server.begin();  // it will start webserver
   websockets.begin();
   websockets.onEvent(webSocketEvent);
 }
-//-------------------------------------------------------------------
-//---------------void loop-------------------------------------------
-//-------------------------------------------------------------------
-void loop()
-{
+void loop(){
+   double Vout, Rth, temperature, adc_value; 
+  adc_value = analogRead(A0);
+  Vout = (adc_value * VCC) / adc_resolution;
+  Rth = (VCC * R2 / Vout) - R2;
+  temperature = (1 / (A + (B * log(Rth)) + (C * pow((log(Rth)),3))));   // Temperature in kelvin
+  temperature = temperature - 273.15;  // Temperature in degree celsius
+  Serial.print("Temperature = ");
+  Serial.print(temperature);
+  Serial.println(" *C");
+  delay(5000);
+  
   websockets.loop();
-  temp();
+
 }

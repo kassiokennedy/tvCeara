@@ -1,6 +1,27 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <style>
+      buton {
+        text-decoration: none;
+        background: red;
+        color: rgb(179, 45, 45);
+        font: 80px calibri;
+        border-radius: 50%;
+        box-shadow: 0px 0px 10px 15px #7e0505;
+        border: solid 10px rgba(131, 131, 18, 0.9);
+        cursor: pointer;
+      }
+      body {
+        font-family: 'Calibri';
+        background-color: grey;
+      }
+      h1 {
+        color: whitesmoke;
+        text-align: center;
+        font-size: 50px;
+      }
+    </style>
     <script>
       var connection = new WebSocket('ws://' + location.hostname + ':81/')
       var button_1_status = 0
@@ -33,19 +54,22 @@
     </script>
   </head>
   <body>
-    <h1>Teste</h1>
-    <h3>Led 1</h3>
-    <button onclick="button_1_on()">On</button>
-    <button onclick="button_1_off()">Off</button>
-    <button
-      onclick="window.location='http://+location.hostname+'/led2/off;button_2_on"
-    >
-      On
-    </button>
-    <button
-      onclick="window.location = 'http://'+location.hostname+'/led2/on';button_2_off"
-    >
-      Off
-    </button>
+    <center>
+      <h1>Teste</h1>
+      <h3>Led 1</h3>
+      <button onclick="button_1_on()">On</button>
+      <button onclick="button_1_off()">Off</button>
+      <h3>Led 2</h3>
+      <button
+        onclick="window.location='http://+location.hostname+'/led2/off;button_2_on"
+      >
+        On
+      </button>
+      <button
+        onclick="window.location = 'http://'+location.hostname+'/led2/on';button_2_off"
+      >
+        Off
+      </button>
+    </center>
   </body>
 </html>

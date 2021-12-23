@@ -10,6 +10,10 @@ https://randomnerdtutorials.com/esp8266-web-server-spiffs-nodemcu/
 
 https://capsistema.com.br/index.php/2020/02/26/servidor-da-web-esp8266-envie-comandos-e-atenda-a-pagina-html/
 
+https://www.teachmemicro.com/display-sensor-data-nodemcu-web-server/
+
+https://www.teachmemicro.com/nodemcu-ajax-dynamic-sensor-data-web-page/
+
 ======================================================================
 Esp Libraries:
 
