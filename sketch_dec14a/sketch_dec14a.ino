@@ -26,6 +26,10 @@ const double adc_resolution = 1023; // 10-bit adc
 const double A = 0.001129148;   // thermistor equation parameters
 const double B = 0.000234125;
 const double C = 0.0000000876741;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6e7d66bb4678d0ee7ace47c5b61ca15fc902a059
 
 //---------------------------------------------------------------------------
 //#define outputpin A0
@@ -33,14 +37,27 @@ const double C = 0.0000000876741;
 #define LED1 13
 #define LED2 2
 
+<<<<<<< HEAD
 
+=======
+/*
+  //----------------Login---------------------------------
+  const char *ssid = "GL INTERNET_C140";          // WIFI password
+  const char *password = "Engenhari@2019"; // ID Password
+  //----------------IP definition ------------------------
+  IPAddress ip(10, 0, 0, 200);
+  IPAddress gateway(10, 0, 0, 1);
+  IPAddress subnet(255, 255, 255, 0);
+*/
+>>>>>>> 6e7d66bb4678d0ee7ace47c5b61ca15fc902a059
 //----------------Login---------------------------------
-const char *ssid = "GL INTERNET_C140";          // WIFI password
-const char *password = "Engenhari@2019"; // ID Password
+const char *ssid = "TVC";          // WIFI password
+const char *password = "504b2014"; // ID
 //----------------IP definition ------------------------
-IPAddress ip(10, 0, 0, 200);
-IPAddress gateway(10, 0, 0, 1);
+IPAddress ip(192, 168, 10, 175);
+IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 255, 0);
+<<<<<<< HEAD
 /*
   //----------------Login---------------------------------
   const char *ssid = "TVC";          // WIFI password
@@ -50,6 +67,8 @@ IPAddress subnet(255, 255, 255, 0);
   IPAddress gateway(192, 168, 1, 1);
   IPAddress subnet(255, 255, 255, 0);
 */
+=======
+>>>>>>> 6e7d66bb4678d0ee7ace47c5b61ca15fc902a059
 //---------------------------------------------------------------------
 //----------------Web Page---------------------------------------------
 //---------------------------------------------------------------------
@@ -99,6 +118,10 @@ function send_data()
   <h3>Led 2</h3>
   <button onclick="window.location = 'http://'+location.hostname+'/led2/off';button_2_on">On</button>
   <button onclick="window.location = 'http://'+location.hostname+'/led2/on';button_2_off">Off</button>
+<<<<<<< HEAD
+=======
+ <form action="/get">input1: <input type="text" name="input1"><input type="submit" value="Submit"></form><br>
+>>>>>>> 6e7d66bb4678d0ee7ace47c5b61ca15fc902a059
 </center>
 </body>
 </html>
