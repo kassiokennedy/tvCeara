@@ -3,8 +3,23 @@
 #include <ESP8266WebServer.h>
 
 // Replace with your network credentials
-const char *ssid = "TVC";
-const char *password = "504b2014";
+
+//----------------Login---------------------------------
+const char *ssid = "GL INTERNET_C140";          // WIFI password
+const char *password = "Engenhari@2019"; // ID Password
+//----------------IP definition ------------------------
+IPAddress ip(10, 0, 0, 200);
+IPAddress gateway(10, 0, 0, 1);
+IPAddress subnet(255, 255, 255, 0);
+/*
+  //----------------Login---------------------------------
+  const char *ssid = "TVC";          // WIFI password
+  const char *password = "504b2014"; // ID
+  //----------------IP definition ------------------------
+  IPAddress ip(192, 168, 10, 175);
+  IPAddress gateway(192, 168, 1, 1);
+  IPAddress subnet(255, 255, 255, 0);
+*/
 //-----------------NTC----------------------------------------------------
 const double VCC = 2.294;           // NodeMCU on board 3.3v vcc
 const double R2 = 9980;             // 10k ohm series resistor
@@ -25,9 +40,10 @@ void setup(void)
 
   pinMode(A0, INPUT);
 
-  delay(1000);
+  delay(100);
   Serial.begin(115200);
   WiFi.begin(ssid, password); // begin WiFi connection
+  WiFi.config(ip, gateway, subnet);//Definicao do IP
   Serial.println("");
 
   // Wait for connection
@@ -44,11 +60,12 @@ void setup(void)
   Serial.println(WiFi.localIP());
 
   server.on("/data.txt", []()
-            {
+  {
     text = (String)data;
-    server.send(200, "text/html", text); });
+    server.send(200, "text/html", text);
+  });
   server.on("/", []()
-            {
+  {
     page = "<h1>Sensor to Node MCU Web Server</h1><h1>Data:</h1> <h1 id=\"data\">""</h1>\r\n";
     page += "<script>\r\n";
     page += "var x = setInterval(function() {loadData(\"data.txt\",updateData)}, 100);\r\n";
@@ -66,7 +83,8 @@ void setup(void)
     page += " document.getElementById(\"data\").innerHTML = this.responseText;\r\n";
     page += "}\r\n";
     page += "</script>\r\n";
-    server.send(200, "text/html", page); });
+    server.send(200, "text/html", page);
+  });
   server.begin();
   Serial.println("Web server started!");
 }

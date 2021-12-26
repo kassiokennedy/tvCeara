@@ -14,6 +14,10 @@ https://www.teachmemicro.com/display-sensor-data-nodemcu-web-server/
 
 https://www.teachmemicro.com/nodemcu-ajax-dynamic-sensor-data-web-page/
 
+# Aprendendo webserver:
+
+http://renatoaloi.blogspot.com/2016/05/codigo-basico-do-web-server-no-esp8266.html
+
 ======================================================================
 Esp Libraries:
 
