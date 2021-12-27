@@ -3,7 +3,7 @@
 #include <ESP8266WebServer.h>
 
 // Replace with your network credentials
-
+/*
 //----------------Login---------------------------------
 const char *ssid = "GL INTERNET_C140";          // WIFI password
 const char *password = "Engenhari@2019"; // ID Password
@@ -11,7 +11,7 @@ const char *password = "Engenhari@2019"; // ID Password
 IPAddress ip(10, 0, 0, 200);
 IPAddress gateway(10, 0, 0, 1);
 IPAddress subnet(255, 255, 255, 0);
-/*
+*/
   //----------------Login---------------------------------
   const char *ssid = "TVC";          // WIFI password
   const char *password = "504b2014"; // ID
@@ -19,7 +19,7 @@ IPAddress subnet(255, 255, 255, 0);
   IPAddress ip(192, 168, 10, 175);
   IPAddress gateway(192, 168, 1, 1);
   IPAddress subnet(255, 255, 255, 0);
-*/
+
 //-----------------NTC----------------------------------------------------
 const double VCC = 2.294;           // NodeMCU on board 3.3v vcc
 const double R2 = 9980;             // 10k ohm series resistor
