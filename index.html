@@ -14,20 +14,25 @@
       rel="stylesheet"
     />
     <title>Supervisório TV Ceará</title>
+    <link rel="icon" type="imagem/png" href="/assets/" />
   </head>
 
-  <body>
+  <body onload="startTime()">
     <!---------------------------------------------->
     <header>
       <div class="headdiv">
-        <div>
+        <div class="head1">
+          <i class="icon-tvc"></i>
+        </div>
+        <div class="head2">
           <h2>Supervisório TVC</h2>
         </div>
-        <div>
-          <i class="icon-tvc"></i>
+        <div class="head3">
+          <div id="txt"></div>
         </div>
       </div>
     </header>
+
     <!---------------------------------------------->
     <main>
       <!---------------------------------------------->
@@ -35,7 +40,8 @@
         <div class="tab grid">
           <iframe
             id="sup1"
-            src="http://127.0.0.1:5500/index.html"
+            src="https://player.jmvstream.com/avj/fut4x2uu9cx01mZ7Mb2pm7RXeDRW38
+            "
             width="100%"
             height="100%"
             name="iframe_artigos"
@@ -64,6 +70,7 @@
             name="Teradek"
           ></iframe>
         </div>
+        <!----------Clock--------------------------->
 
         <!--------------
           
@@ -113,5 +120,25 @@
       </section>
     </main>
     <script src="main.js"></script>
+    <!----------Clock--------------------------->
+    <script>
+      function startTime() {
+        const today = new Date()
+        let h = today.getHours()
+        let m = today.getMinutes()
+        let s = today.getSeconds()
+        m = checkTime(m)
+        s = checkTime(s)
+        document.getElementById('txt').innerHTML = h + ':' + m
+        setTimeout(startTime, 1000)
+      }
+
+      function checkTime(i) {
+        if (i < 10) {
+          i = '0' + i
+        } // add zero in front of numbers < 10
+        return i
+      }
+    </script>
   </body>
 </html>

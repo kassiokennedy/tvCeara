@@ -15,7 +15,7 @@ function openCity(evt, cityName) {
 }
 */
 //-----------Tabs----------------------------------------------
-
+/*
 var x = setInterval(function() {loadData(\"data.txt\",updateData)}, 100)
 function loadData(url, callback){
   var xhttp = new XMLHttpRequest();
@@ -30,3 +30,4 @@ function loadData(url, callback){
   function updateData(){
    document.getElementById("data").innerHTML = this.responseText;
   }
+  */
