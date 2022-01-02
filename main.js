@@ -31,3 +31,43 @@ function loadData(url, callback){
    document.getElementById("data").innerHTML = this.responseText;
   }
   */
+
+var attempt = 3 // Variable to count number of attempts.
+// Below function Executes on click of login button.
+function validate() {
+  var username = document.getElementById('username').value
+  var password = document.getElementById('password').value
+  if (username == 'funtelc' && password == 'f1234') {
+    alert('Login successfully')
+    window.location = 'success.html' // Redirecting to other page.
+    return false
+  } else {
+    attempt-- // Decrementing by one.
+    alert('You have left ' + attempt + ' attempt;')
+    // Disabling fields after 3 attempts.
+    if (attempt == 0) {
+      document.getElementById('username').disabled = true
+      document.getElementById('password').disabled = true
+      document.getElementById('submit').disabled = true
+      return false
+    }
+  }
+}
+//----------------cClock-----------------------------------
+function startTime() {
+  const today = new Date()
+  let h = today.getHours()
+  let m = today.getMinutes()
+  let s = today.getSeconds()
+  m = checkTime(m)
+  s = checkTime(s)
+  document.getElementById('txt').innerHTML = h + ':' + m
+  setTimeout(startTime, 1000)
+}
+
+function checkTime(i) {
+  if (i < 10) {
+    i = '0' + i
+  } // add zero in front of numbers < 10
+  return i
+}

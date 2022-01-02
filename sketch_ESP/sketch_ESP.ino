@@ -3,7 +3,7 @@
 #include <ESP8266WebServer.h>
 
 // Replace with your network credentials
-/*
+
 //----------------Login---------------------------------
 const char *ssid = "GL INTERNET_C140";          // WIFI password
 const char *password = "Engenhari@2019"; // ID Password
@@ -11,7 +11,7 @@ const char *password = "Engenhari@2019"; // ID Password
 IPAddress ip(10, 0, 0, 200);
 IPAddress gateway(10, 0, 0, 1);
 IPAddress subnet(255, 255, 255, 0);
-*/
+/*
   //----------------Login---------------------------------
   const char *ssid = "TVC";          // WIFI password
   const char *password = "504b2014"; // ID
@@ -19,7 +19,7 @@ IPAddress subnet(255, 255, 255, 0);
   IPAddress ip(192, 168, 10, 175);
   IPAddress gateway(192, 168, 1, 1);
   IPAddress subnet(255, 255, 255, 0);
-
+*/
 //-----------------NTC----------------------------------------------------
 const double VCC = 2.294;           // NodeMCU on board 3.3v vcc
 const double R2 = 9980;             // 10k ohm series resistor
@@ -29,6 +29,7 @@ const double A = 0.001129148; // thermistor equation parameters
 const double B = 0.000234125;
 const double C = 0.0000000876741;
 //---------------------------------------------------------------------------
+int i = 0;
 
 ESP8266WebServer server(80); // instantiate server at port 80 (http port)
 
@@ -39,6 +40,7 @@ void setup(void)
 {
 
   pinMode(A0, INPUT);
+  pinMode(2, OUTPUT);
 
   delay(100);
   Serial.begin(115200);
@@ -66,7 +68,8 @@ void setup(void)
   });
   server.on("/", []()
   {
-    page = "<h1>Sensor to Node MCU Web Server</h1><h1>Data:</h1> <h1 id=\"data\">""</h1>\r\n";
+    page = "<h1>Temperatura:</h1><h1 id=\"data\">""</h1>\r\n";
+    page += "<h2>"+ String(i) + "</h2>\r\n";
     page += "<script>\r\n";
     page += "var x = setInterval(function() {loadData(\"data.txt\",updateData)}, 100);\r\n";
     page += "function loadData(url, callback){\r\n";
@@ -91,6 +94,8 @@ void setup(void)
 
 void loop(void)
 {
+  digitalWrite(2, HIGH);
+  
   double Vout, Rth, temperature, adc_value;
   adc_value = analogRead(A0);
   Vout = (adc_value * VCC) / adc_resolution;
@@ -104,4 +109,5 @@ void loop(void)
 
   data = temperature;
   server.handleClient();
+  i++;
 }
