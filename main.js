@@ -45,7 +45,7 @@ function validate() {
     //document.location.href = 'a.html'
   } else {
     attempt-- // Decrementing by one.
-    alert('You have left ' + attempt + ' attempt;')
+    alert('Voce fez ' + attempt + ' tentativa(s)!')
     // Disabling fields after 3 attempts.
     if (attempt == 0) {
       document.getElementById('username').disabled = true
@@ -54,7 +54,7 @@ function validate() {
     }
   }
 }
-//----------------cClock-----------------------------------
+//----------------Clock-----------------------------------
 function startTime() {
   const today = new Date()
   let h = today.getHours()
