@@ -35,12 +35,14 @@ function loadData(url, callback){
 var attempt = 3 // Variable to count number of attempts.
 // Below function Executes on click of login button.
 function validate() {
+  //e.preventDefault()
   var username = document.getElementById('username').value
   var password = document.getElementById('password').value
-  if (username == 'funtelc' && password == 'f1234') {
+  if (username == 'funtelc' && password == '1234') {
+    document.location.href = 'index.html'
     alert('Login successfully')
-    window.location = 'success.html' // Redirecting to other page.
-    return false
+    // window.location = 'a.html' // Redirecting to other page.
+    //document.location.href = 'a.html'
   } else {
     attempt-- // Decrementing by one.
     alert('You have left ' + attempt + ' attempt;')
@@ -49,7 +51,6 @@ function validate() {
       document.getElementById('username').disabled = true
       document.getElementById('password').disabled = true
       document.getElementById('submit').disabled = true
-      return false
     }
   }
 }
