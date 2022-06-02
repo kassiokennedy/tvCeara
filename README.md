@@ -1,5 +1,8 @@
 # tvCeara
 
+procurar fazer o login com prompt()
+
+======================================================================
 Referencias:
 
 https://www.youtube.com/watch?v=cWZP7Y8qP6E&t=0s
