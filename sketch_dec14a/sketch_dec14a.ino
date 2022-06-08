@@ -25,7 +25,7 @@ const double adc_resolution = 1023;  // 10-bit adc
 const double A = 0.001129148;  // thermistor equation parameters
 const double B = 0.000234125;
 const double C = 0.0000000876741;
-
+/*
 //----------------Login---------------------------------
 const char *ssid = "GL INTERNET_C140";    // WIFI password
 const char *password = "Engenhari@2019";  // ID Password
@@ -33,7 +33,8 @@ const char *password = "Engenhari@2019";  // ID Password
 IPAddress ip(10, 0, 0, 200);
 IPAddress gateway(10, 0, 0, 1);
 IPAddress subnet(255, 255, 255, 0);
-/*
+*/
+
   //----------------Login---------------------------------
   const char *ssid = "TVC";          // WIFI password
   const char *password = "504b2014"; // ID
@@ -41,7 +42,6 @@ IPAddress subnet(255, 255, 255, 0);
   IPAddress ip(192, 168, 10, 175);
   IPAddress gateway(192, 168, 1, 1);
   IPAddress subnet(255, 255, 255, 0);
-*/
 
 //-------------------WEB-----------------------------------------------------
 WiFiServer server2(8086);   //CASO OCORRA PROBLEMAS COM A PORTA 80, UTILIZE OUTRA (EX:8082,8089) E A CHAMADA DA URL FICARÁ IP:PORTA(EX: 192.168.0.15:8082)

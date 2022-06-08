@@ -29,7 +29,17 @@ Esp Libraries:
 https://github.com/me-no-dev/ESPAsyncTCP
 https://github.com/me-no-dev/ESPAsyncWebServer
 
+
+#include <WebSocketsServer.h>
+
+https://github.com/Links2004/arduinoWebSockets/
+
+Fazer download e incluir como arquivo .ZIP pela biblioteca da ide do arduino 
+
 ======================================================================
 anotaçoes (Apagar no final do projeto)
 
 n the CSS, a class selector is a name preceded by a full stop (“.”) and an ID selector is a name preceded by a hash character (“#”).
+
+
+https://www.youtube.com/watch?v=mEptke-5rJc
