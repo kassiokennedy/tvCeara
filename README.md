@@ -1,6 +1,7 @@
 # tvCeara
 
-procurar fazer o login com prompt()
+Esse é um projeto idelaizado por mim pra uma empresa do governo do estado do Ceará apenas com o intuido de aprender e praticar.
+
 
 ======================================================================
 Referencias:
