@@ -1,6 +1,6 @@
 # tvCeara
 
-Esse é um projeto idelaizado por mim pra uma empresa do governo do estado do Ceará apenas com o intuido de aprender e praticar.
+Esse é um projeto idealizado por mim pra uma empresa do governo do estado do Ceará apenas com o intuido de aprender e praticar.
 
 
 ======================================================================
